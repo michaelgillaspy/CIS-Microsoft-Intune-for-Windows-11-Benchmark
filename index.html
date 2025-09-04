@@ -694,6 +694,43 @@
     </div>
 
     <script>
+        // === AUTO-CONFIGURATION ===
+        // Automatically detect GitHub repository from URL
+        function getGitHubConfig() {
+            // Check if we're on GitHub Pages (username.github.io)
+            const hostname = window.location.hostname;
+            const pathname = window.location.pathname;
+            
+            // Pattern: username.github.io/repository-name/
+            if (hostname.includes('github.io')) {
+                const parts = hostname.split('.');
+                const username = parts[0]; // Gets 'michaelgillaspy' from 'michaelgillaspy.github.io'
+                const pathParts = pathname.split('/').filter(p => p); // Remove empty strings
+                const repoName = pathParts[0] || 'CIS-Microsoft-Intune-for-Windows-11-Benchmark'; // First part of path is repo name
+                
+                return {
+                    githubUsername: username,
+                    repositoryName: repoName,
+                    branch: 'main',
+                    remoteDataFile: 'Data.json',
+                    localDataFile: './Data.json' // Use same file for local and remote
+                };
+            }
+            
+            // Fallback for local development
+            return {
+                githubUsername: 'michaelgillaspy',
+                repositoryName: 'CIS-Microsoft-Intune-for-Windows-11-Benchmark',
+                branch: 'main',
+                remoteDataFile: 'Data.json',
+                localDataFile: './Data.json'
+            };
+        }
+        
+        const CONFIG = getGitHubConfig();
+        console.log('Auto-detected configuration:', CONFIG);
+        // === END AUTO-CONFIGURATION ===
+
         let allRecommendations = [];
         let filteredRecommendations = [];
 
@@ -712,11 +749,11 @@
                               window.location.hostname === '127.0.0.1';
             
             if (isLocalhost || window.location.protocol === 'file:') {
-                // For local web server or file:// protocol, look for JSON file in same directory
-                return './CIS_Windows_Intune.json';
+                // For local web server or file:// protocol, use local file from config
+                return CONFIG.localDataFile;
             } else {
-                // GitHub Pages - update this URL to your repository
-                return 'https://raw.githubusercontent.com/michaelgillaspy/CIS-Microsoft-Intune-for-Windows-11-Benchmark/main/Data.json';
+                // GitHub Pages - build URL from config values
+                return `https://raw.githubusercontent.com/${CONFIG.githubUsername}/${CONFIG.repositoryName}/${CONFIG.branch}/${CONFIG.remoteDataFile}`;
             }
         }
 
