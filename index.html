@@ -537,7 +537,7 @@
 
             <div class="implementation-rate-card" id="implementation-rate-card">
                 <div class="compliance-percentage" id="compliance-percentage">0%</div>
-                <div class="compliance-label">Overall Implementation Rate</div>
+                <div class="compliance-label">Overall L1 Implementation Rate</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
                 </div>
@@ -660,11 +660,28 @@
         function formatTextWithCodeBlocks(text) {
             if (!text) return 'No information provided';
             
+            // Debug: Log the original text to see what we're working with
+            console.log('Original text:', text);
+            
             // First handle ||CODE|| delimiters - convert them to proper code blocks with copy buttons
-            let formattedText = text.replace(/\|\|CODE\|\|(.*?)\|\|CODE\|\|/gs, function(match, codeContent) {
+            // Try multiple variations of the delimiter pattern to handle edge cases
+            let formattedText = text;
+            
+            // Pattern 1: Standard ||CODE|| with any content
+            formattedText = formattedText.replace(/\|\|CODE\|\|(.*?)\|\|CODE\|\|/gs, function(match, codeContent) {
+                console.log('Found CODE block:', codeContent);
                 const codeId = 'code-' + Math.random().toString(36).substr(2, 9);
                 return `<span class="code-container"><code id="${codeId}">${codeContent}</code><button class="copy-btn" onclick="copyCodeToClipboard('${codeId}', this)">Copy</button></span>`;
             });
+            
+            // Pattern 2: Handle potential spacing issues around delimiters
+            formattedText = formattedText.replace(/\|\|\s*CODE\s*\|\|(.*?)\|\|\s*CODE\s*\|\|/gs, function(match, codeContent) {
+                console.log('Found CODE block with spaces:', codeContent);
+                const codeId = 'code-' + Math.random().toString(36).substr(2, 9);
+                return `<span class="code-container"><code id="${codeId}">${codeContent}</code><button class="copy-btn" onclick="copyCodeToClipboard('${codeId}', this)">Copy</button></span>`;
+            });
+            
+            console.log('Formatted text:', formattedText);
             
             // Only add line breaks for numbered items that appear after significant breaks
             // This looks for numbers at the very start or after periods followed by significant whitespace
