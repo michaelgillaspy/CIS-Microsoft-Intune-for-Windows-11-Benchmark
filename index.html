@@ -400,6 +400,42 @@
             font-family: 'SFMono-Regular', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
             font-size: 0.9rem;
             border-left: 3px solid #667eea;
+            position: relative;
+            display: inline-block;
+        }
+
+        .code-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 4px 6px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            z-index: 10;
+        }
+
+        .code-container:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: #3182ce;
+        }
+
+        .copy-btn.copied {
+            background: #48bb78;
         }
 
         .loading {
@@ -620,13 +656,19 @@
             }
         }
 
-        // Function to format text - only break on numbered items that start sentences/paragraphs
+        // Function to format text - only break on numbered items that start sentences/paragraphs and handle code blocks
         function formatTextWithCodeBlocks(text) {
             if (!text) return 'No information provided';
             
+            // First handle ||CODE|| delimiters - convert them to proper code blocks with copy buttons
+            let formattedText = text.replace(/\|\|CODE\|\|(.*?)\|\|CODE\|\|/gs, function(match, codeContent) {
+                const codeId = 'code-' + Math.random().toString(36).substr(2, 9);
+                return `<span class="code-container"><code id="${codeId}">${codeContent}</code><button class="copy-btn" onclick="copyCodeToClipboard('${codeId}', this)">Copy</button></span>`;
+            });
+            
             // Only add line breaks for numbered items that appear after significant breaks
             // This looks for numbers at the very start or after periods followed by significant whitespace
-            return text.replace(/(^|\.[\s\n]+)(\d+\.\s)/g, '$1<br>$2').replace(/^<br>/, '');
+            return formattedText.replace(/(^|\.[\s\n]+)(\d+\.\s)/g, '$1<br>$2').replace(/^<br>/, '');
         }
 
         // Load and parse data
@@ -918,6 +960,43 @@
             const modal = document.getElementById('modal-overlay');
             modal.style.display = 'none';
             document.body.style.overflow = '';
+        }
+
+        // Copy code block content to clipboard
+        function copyCodeToClipboard(codeId, button) {
+            const codeElement = document.getElementById(codeId);
+            const text = codeElement.textContent;
+            
+            navigator.clipboard.writeText(text).then(function() {
+                // Show success feedback
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 1500);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    button.textContent = 'Copied!';
+                    button.classList.add('copied');
+                    setTimeout(function() {
+                        button.textContent = 'Copy';
+                        button.classList.remove('copied');
+                    }, 1500);
+                } catch (err) {
+                    console.error('Fallback copy failed: ', err);
+                }
+                document.body.removeChild(textArea);
+            });
         }
 
         // Show error message
