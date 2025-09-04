@@ -584,16 +584,20 @@
                     <div class="stat-label">Total Recommendations</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="l1-implemented">0</div>
-                    <div class="stat-label">L1 Implemented</div>
-                </div>
-                <div class="stat-card">
                     <div class="stat-number" id="l1-controls">0</div>
                     <div class="stat-label">Level 1 Controls</div>
                 </div>
                 <div class="stat-card">
+                    <div class="stat-number" id="l1-implemented">0</div>
+                    <div class="stat-label">L1 Implemented</div>
+                </div>
+                <div class="stat-card">
                     <div class="stat-number" id="l2-controls">0</div>
                     <div class="stat-label">Level 2 Controls</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="l2-implemented">0</div>
+                    <div class="stat-label">L2 Implemented</div>
                 </div>
             </div>
 
@@ -779,9 +783,13 @@
             const l1Implemented = allRecommendations.filter(r => 
                 r['Compliance Status'] === 'Yes' && r.Level && r.Level.includes('(L1)')
             ).length;
+            const l2Implemented = allRecommendations.filter(r => 
+                r['Compliance Status'] === 'Yes' && r.Level && r.Level.includes('(L2)')
+            ).length;
             
             document.getElementById('total-recommendations').textContent = total;
             document.getElementById('l1-implemented').textContent = l1Implemented;
+            document.getElementById('l2-implemented').textContent = l2Implemented;
             document.getElementById('l1-controls').textContent = l1Controls;
             document.getElementById('l2-controls').textContent = l2Controls;
         }
@@ -1140,6 +1148,28 @@
                         card.style.cursor = 'pointer';
                         card.addEventListener('click', function() {
                             document.getElementById('level-filter').value = 'L1';
+                            document.getElementById('status-filter').value = 'Yes';
+                            document.getElementById('search-input').value = '';
+                            filterRecommendations();
+                            document.querySelector('.table-container').scrollIntoView({ 
+                                behavior: 'smooth' 
+                            });
+                        });
+                        
+                        // Add hover effects
+                        card.addEventListener('mouseenter', function() {
+                            this.style.background = '#f7fafc';
+                        });
+                        card.addEventListener('mouseleave', function() {
+                            this.style.background = 'white';
+                        });
+                    }
+                    
+                    // L2 Implemented card - filter to L2 + Implemented
+                    if (label && label.textContent.includes('L2 Implemented')) {
+                        card.style.cursor = 'pointer';
+                        card.addEventListener('click', function() {
+                            document.getElementById('level-filter').value = 'L2';
                             document.getElementById('status-filter').value = 'Yes';
                             document.getElementById('search-input').value = '';
                             filterRecommendations();
