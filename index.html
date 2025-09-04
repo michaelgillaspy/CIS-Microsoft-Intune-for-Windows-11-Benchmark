@@ -46,11 +46,17 @@
             font-weight: 500;
         }
 
+        .implementation-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
         .implementation-rate-card {
             background: white;
             border-radius: 12px;
             padding: 30px;
-            margin-bottom: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
             position: relative;
@@ -495,6 +501,10 @@
                 font-size: 2rem;
             }
 
+            .implementation-cards-grid {
+                grid-template-columns: 1fr;
+            }
+
             .compliance-percentage {
                 font-size: 3rem;
             }
@@ -550,19 +560,21 @@
                 <div class="version" id="document-version">Loading...</div>
             </div>
 
-            <div class="implementation-rate-card" id="implementation-rate-card">
-                <div class="compliance-percentage" id="compliance-percentage">0%</div>
-                <div class="compliance-label">Overall L1 Implementation Rate</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            <div class="implementation-cards-grid">
+                <div class="implementation-rate-card" id="implementation-rate-card">
+                    <div class="compliance-percentage" id="compliance-percentage">0%</div>
+                    <div class="compliance-label">Overall L1 Implementation Rate</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="implementation-rate-card l2-card" id="l2-implementation-rate-card">
-                <div class="compliance-percentage" id="l2-compliance-percentage">0%</div>
-                <div class="compliance-label">Overall L2 Implementation Rate</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="l2-progress-fill" style="width: 0%"></div>
+                <div class="implementation-rate-card l2-card" id="l2-implementation-rate-card">
+                    <div class="compliance-percentage" id="l2-compliance-percentage">0%</div>
+                    <div class="compliance-label">Overall L2 Implementation Rate</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="l2-progress-fill" style="width: 0%"></div>
+                    </div>
                 </div>
             </div>
 
