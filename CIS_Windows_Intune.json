@@ -6,6 +6,7 @@
             "Number": "1.1",
             "Level": "(L1)",
             "Title": "Ensure 'Allow Cortana Above Lock' is set to 'Block' (Automated)",
+			"Implemented": "Yes"
             "Profile Applicability": "• Level 1 (L1)",
             "Description": "This policy setting determines whether or not the user can interact with Cortana using speech while the system is locked. The recommended state for this setting is: Block.",
             "Rationale": "Access to any computer resource should not be allowed when the device is locked.",
@@ -19,6 +20,8 @@
             "Number": "4.1.3.1",
             "Level": "(L1)",
             "Title": "Ensure 'Prevent enabling lock screen camera' is set to 'Enabled' (Automated)",
+			"Implemented": "No"
+			"Reasoning": "Because I didn't want to"
             "Profile Applicability": "• Level 1 (L1)",
             "Description": "Disables the lock screen camera toggle switch in PC Settings and prevents a camera from being invoked on the lock screen. The recommended state for this setting is: Enabled.",
             "Rationale": "Disabling the lock screen camera extends the protection afforded by the lock screen to camera features.",
@@ -32,6 +35,8 @@
             "Number": "4.1.3.2",
             "Level": "(L1)",
             "Title": "Ensure 'Prevent enabling lock screen slide show' is set to 'Enabled' (Automated)",
+			"Implemented": "Partially"
+			"Reasoning": "Some things need slide shows"
             "Profile Applicability": "• Level 1 (L1)",
             "Description": "Disables the lock screen slide show settings in PC Settings and prevents a slide show from playing on the lock screen. The recommended state for this setting is: Enabled.",
             "Rationale": "Disabling the lock screen slide show extends the protection afforded by the lock screen to slide show contents.",
