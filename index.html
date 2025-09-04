@@ -580,10 +580,6 @@
 
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number" id="total-recommendations">0</div>
-                    <div class="stat-label">Total Recommendations</div>
-                </div>
-                <div class="stat-card">
                     <div class="stat-number" id="l1-controls">0</div>
                     <div class="stat-label">Level 1 Controls</div>
                 </div>
@@ -777,7 +773,6 @@
 
         // Update statistics cards
         function updateStats() {
-            const total = allRecommendations.length;
             const l1Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L1)')).length;
             const l2Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L2)')).length;
             const l1Implemented = allRecommendations.filter(r => 
@@ -787,7 +782,6 @@
                 r['Compliance Status'] === 'Yes' && r.Level && r.Level.includes('(L2)')
             ).length;
             
-            document.getElementById('total-recommendations').textContent = total;
             document.getElementById('l1-implemented').textContent = l1Implemented;
             document.getElementById('l2-implemented').textContent = l2Implemented;
             document.getElementById('l1-controls').textContent = l1Controls;
@@ -1120,28 +1114,6 @@
                 for (let i = 0; i < cards.length; i++) {
                     const card = cards[i];
                     const label = card.querySelector('.stat-label');
-                    
-                    // Total Recommendations card - reset all filters
-                    if (label && label.textContent.includes('Total Recommendations')) {
-                        card.style.cursor = 'pointer';
-                        card.addEventListener('click', function() {
-                            document.getElementById('level-filter').value = 'all';
-                            document.getElementById('status-filter').value = 'all';
-                            document.getElementById('search-input').value = '';
-                            filterRecommendations();
-                            document.querySelector('.table-container').scrollIntoView({ 
-                                behavior: 'smooth' 
-                            });
-                        });
-                        
-                        // Add hover effects
-                        card.addEventListener('mouseenter', function() {
-                            this.style.background = '#f7fafc';
-                        });
-                        card.addEventListener('mouseleave', function() {
-                            this.style.background = 'white';
-                        });
-                    }
                     
                     // L1 Implemented card - filter to L1 + Implemented
                     if (label && label.textContent.includes('L1 Implemented')) {
