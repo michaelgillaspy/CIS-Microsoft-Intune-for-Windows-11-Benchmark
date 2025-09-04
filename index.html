@@ -268,6 +268,11 @@
             color: #4a5568;
         }
 
+        .badge.status-to-review {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
         .details-btn {
             background: #4299e1;
             color: white;
@@ -538,6 +543,7 @@
                             <option value="Yes">Implemented</option>
                             <option value="No">Not Implemented</option>
                             <option value="Partial">Partially Implemented</option>
+                            <option value="To Review">To Review</option>
                             <option value="Unknown">Unknown</option>
                         </select>
                     </div>
@@ -592,10 +598,11 @@
         let filteredRecommendations = [];
 
         // Helper function to determine the actual implementation status
-        function getImplementationStatus(implementedValue) {
-            if (implementedValue === 'Yes') return 'Yes';
-            if (implementedValue === 'No') return 'No';
-            if (implementedValue === 'Partial' || implementedValue === 'Partially') return 'Partial';
+        function getImplementationStatus(complianceStatusValue) {
+            if (complianceStatusValue === 'Yes') return 'Yes';
+            if (complianceStatusValue === 'No') return 'No';
+            if (complianceStatusValue === 'Partial' || complianceStatusValue === 'Partially') return 'Partial';
+            if (complianceStatusValue === 'To Review') return 'To Review';
             return 'Unknown'; // For missing, null, undefined, or any other value
         }
 
@@ -675,7 +682,7 @@
             const l1Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L1)')).length;
             const l2Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L2)')).length;
             const l1Implemented = allRecommendations.filter(r => 
-                r.Implemented === 'Yes' && r.Level && r.Level.includes('(L1)')
+                r['Compliance Status'] === 'Yes' && r.Level && r.Level.includes('(L1)')
             ).length;
             
             document.getElementById('total-recommendations').textContent = total;
@@ -687,7 +694,7 @@
         // Update implementation rate card (L1 controls only)
         function updateImplementationRate() {
             const l1Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L1)'));
-            const l1Implemented = l1Controls.filter(r => r.Implemented === 'Yes');
+            const l1Implemented = l1Controls.filter(r => r['Compliance Status'] === 'Yes');
             const percentage = l1Controls.length > 0 ? Math.round((l1Implemented.length / l1Controls.length) * 100) : 0;
             
             const card = document.getElementById('implementation-rate-card');
@@ -724,7 +731,7 @@
                 
                 // Status filter - Enhanced to handle Unknown status
                 if (statusFilter !== 'all') {
-                    const actualStatus = getImplementationStatus(recommendation.Implemented);
+                    const actualStatus = getImplementationStatus(recommendation['Compliance Status']);
                     if (statusFilter === 'Partial') {
                         // Handle both "Partial" and "Partially" values
                         if (actualStatus !== 'Partial') {
@@ -790,7 +797,7 @@
                 const level = levelMatch ? levelMatch[1] : '';
                 
                 // Determine status for badge using the helper function
-                const actualStatus = getImplementationStatus(recommendation.Implemented);
+                const actualStatus = getImplementationStatus(recommendation['Compliance Status']);
                 let statusClass, statusText;
                 
                 switch(actualStatus) {
@@ -805,6 +812,10 @@
                     case 'Partial':
                         statusClass = 'status-partial';
                         statusText = 'Partial';
+                        break;
+                    case 'To Review':
+                        statusClass = 'status-to-review';
+                        statusText = 'To Review';
                         break;
                     default:
                         statusClass = 'status-unknown';
@@ -852,7 +863,7 @@
 
                 <div class="detail-section">
                     <div class="detail-label">Implementation Status</div>
-                    <div class="detail-value">${recommendation.Implemented || 'Unknown'}</div>
+                    <div class="detail-value">${recommendation['Compliance Status'] || 'Unknown'}</div>
                 </div>
 
                 ${recommendation.Reasoning ? `
