@@ -72,6 +72,21 @@
             color: white;
         }
 
+        .implementation-rate-card.l2-card.l2-excellent {
+            background: #48bb78;
+            color: white;
+        }
+
+        .implementation-rate-card.l2-card.l2-good {
+            background: #68d391;
+            color: white;
+        }
+
+        .implementation-rate-card.l2-card.l2-fair {
+            background: #9ae6b4;
+            color: #22543d;
+        }
+
         .compliance-percentage {
             font-size: 4rem;
             font-weight: 800;
@@ -543,6 +558,14 @@
                 </div>
             </div>
 
+            <div class="implementation-rate-card l2-card" id="l2-implementation-rate-card">
+                <div class="compliance-percentage" id="l2-compliance-percentage">0%</div>
+                <div class="compliance-label">Overall L2 Implementation Rate</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="l2-progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="total-recommendations">0</div>
@@ -719,6 +742,7 @@
                 // Calculate and display stats
                 updateStats();
                 updateImplementationRate();
+                updateL2ImplementationRate();
                 
                 // Initialize filters and display
                 filteredRecommendations = [...allRecommendations];
@@ -771,6 +795,30 @@
                 card.classList.add('good');
             } else {
                 card.classList.add('poor');
+            }
+        }
+
+        // Update L2 implementation rate card
+        function updateL2ImplementationRate() {
+            const l2Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L2)'));
+            const l2Implemented = l2Controls.filter(r => r['Compliance Status'] === 'Yes');
+            const percentage = l2Controls.length > 0 ? Math.round((l2Implemented.length / l2Controls.length) * 100) : 0;
+            
+            const card = document.getElementById('l2-implementation-rate-card');
+            const percentageEl = document.getElementById('l2-compliance-percentage');
+            const progressFill = document.getElementById('l2-progress-fill');
+            
+            percentageEl.textContent = `${percentage}%`;
+            progressFill.style.width = `${percentage}%`;
+            
+            // Update card styling based on percentage with custom green shades
+            card.className = 'implementation-rate-card l2-card';
+            if (percentage >= 80) {
+                card.classList.add('l2-excellent');
+            } else if (percentage >= 60) {
+                card.classList.add('l2-good');
+            } else {
+                card.classList.add('l2-fair');
             }
         }
 
