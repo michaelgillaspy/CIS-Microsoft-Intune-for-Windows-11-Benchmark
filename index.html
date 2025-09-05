@@ -736,9 +736,10 @@
 
         // Helper function to determine the actual implementation status
         function getImplementationStatus(complianceStatusValue) {
-            if (complianceStatusValue === 'Yes') return 'Yes';
-            if (complianceStatusValue === 'No') return 'No';
-            if (complianceStatusValue === 'Partial' || complianceStatusValue === 'Partially') return 'Partial';
+            // Handle both old format (Yes/No) and new format (Implemented/Not Implemented)
+            if (complianceStatusValue === 'Yes' || complianceStatusValue === 'Implemented') return 'Yes';
+            if (complianceStatusValue === 'No' || complianceStatusValue === 'Not Implemented') return 'No';
+            if (complianceStatusValue === 'Partial' || complianceStatusValue === 'Partially' || complianceStatusValue === 'Partially Implemented') return 'Partial';
             if (complianceStatusValue === 'To Review') return 'To Review';
             return 'Unknown'; // For missing, null, undefined, or any other value
         }
@@ -842,10 +843,10 @@
             const l1Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L1)')).length;
             const l2Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L2)')).length;
             const l1Implemented = allRecommendations.filter(r => 
-                r['Compliance Status'] === 'Yes' && r.Level && r.Level.includes('(L1)')
+                (r['Compliance Status'] === 'Yes' || r['Compliance Status'] === 'Implemented') && r.Level && r.Level.includes('(L1)')
             ).length;
             const l2Implemented = allRecommendations.filter(r => 
-                r['Compliance Status'] === 'Yes' && r.Level && r.Level.includes('(L2)')
+                (r['Compliance Status'] === 'Yes' || r['Compliance Status'] === 'Implemented') && r.Level && r.Level.includes('(L2)')
             ).length;
             
             document.getElementById('l1-implemented').textContent = l1Implemented;
@@ -857,7 +858,7 @@
         // Update implementation rate card (L1 controls only)
         function updateImplementationRate() {
             const l1Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L1)'));
-            const l1Implemented = l1Controls.filter(r => r['Compliance Status'] === 'Yes');
+            const l1Implemented = l1Controls.filter(r => r['Compliance Status'] === 'Yes' || r['Compliance Status'] === 'Implemented');
             const percentage = l1Controls.length > 0 ? Math.round((l1Implemented.length / l1Controls.length) * 100) : 0;
             
             const card = document.getElementById('implementation-rate-card');
@@ -881,7 +882,7 @@
         // Update L2 implementation rate card
         function updateL2ImplementationRate() {
             const l2Controls = allRecommendations.filter(r => r.Level && r.Level.includes('(L2)'));
-            const l2Implemented = l2Controls.filter(r => r['Compliance Status'] === 'Yes');
+            const l2Implemented = l2Controls.filter(r => r['Compliance Status'] === 'Yes' || r['Compliance Status'] === 'Implemented');
             const percentage = l2Controls.length > 0 ? Math.round((l2Implemented.length / l2Controls.length) * 100) : 0;
             
             const card = document.getElementById('l2-implementation-rate-card');
