@@ -746,16 +746,10 @@
 
         // Detect environment and determine data source
         function getDataUrl() {
-            const isLocalhost = window.location.hostname === 'localhost' || 
-                              window.location.hostname === '127.0.0.1';
+
+            // Always use the local file since we deploy Data.json with the dashboard
+            return './Data.json';
             
-            if (isLocalhost || window.location.protocol === 'file:') {
-                // For local web server or file:// protocol, use local file from config
-                return CONFIG.localDataFile;
-            } else {
-                // GitHub Pages - build URL from config values
-                return `https://raw.githubusercontent.com/${CONFIG.githubUsername}/${CONFIG.repositoryName}/${CONFIG.branch}/${CONFIG.remoteDataFile}`;
-            }
         }
 
         // Function to format text - only break on numbered items that start sentences/paragraphs and handle code blocks
